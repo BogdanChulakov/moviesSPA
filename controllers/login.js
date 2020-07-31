@@ -1,6 +1,6 @@
 import { login as apiLogin } from '../js/data.js';
 import { logOut } from '../js/data.js';
-
+import { showInfo, showError } from './notification.js';
 
 export default async function login() {
     this.partials = {
@@ -15,17 +15,17 @@ export async function loginPost() {
         if (result.hasOwnProperty("errorData")) {
             const error = new Error()
             Object.assign(error, result)
-            throw error
+            throw error;
         }
-
+        
         this.app.userData.username = result.username;
         this.app.userData.userId = result.userId;
-
-        this.redirect("#/home",this.app.userData)
-
+        showInfo(`Logged in as ${result.username}`)
+        this.redirect("#/home", this.app.userData)
+        
     } catch (err) {
-        console.log(err)
-        alert(err.message)
+        console.log(err);
+        showError(err.message);
     }
 }
 export async function logout() {
@@ -34,16 +34,18 @@ export async function logout() {
         if (result.hasOwnProperty("errorData")) {
             const error = new Error()
             Object.assign(error, result)
-            throw error
+            throw error;
         }
-        
+
         this.app.userData.username = '';
         this.app.userData.userId = '';
+
+        showInfo('Successfully logged out!');
 
         this.redirect("#/home")
 
     } catch (err) {
-        console.log(err)
-        alert(err.message)
+        console.log(err);
+        showError(err.message);
     }
 }

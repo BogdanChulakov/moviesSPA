@@ -1,3 +1,4 @@
+import { showLoadind, hideLoadind } from '../controllers/notification.js'
 function host(endpoint) {
     return `https://api.backendless.com/874FD7C2-3127-5829-FF87-FC2D89330F00/AB1F486E-AE4C-4E07-87E2-18A1F660CDED/${endpoint}`
 }
@@ -9,7 +10,8 @@ const endpoints = {
     MOVIES: "data/movies"
 }
 export async function register(username, password) {
-    return (await fetch(host(endpoints.REGISTER), {
+    showLoadind();
+    let result = await (await fetch(host(endpoints.REGISTER), {
         method: "POST",
         headers: {
             'Content-Type': 'application/json'
@@ -19,8 +21,11 @@ export async function register(username, password) {
             password
         })
     })).json();
+    hideLoadind();
+    return result;
 }
 export async function login(username, password) {
+    showLoadind();
     const result = await (await fetch(host(endpoints.LOGIN), {
         method: "POST",
         headers: {
@@ -35,7 +40,7 @@ export async function login(username, password) {
     localStorage.setItem('userToken', result['user-token']);
     localStorage.setItem('username', result.username);
     localStorage.setItem('userId', result.objectId);
-
+    hideLoadind();
     return result;
 
 }
@@ -45,22 +50,29 @@ export async function logOut() {
     if (!token) {
         throw new Error('User is not logged in!');
     }
+    showLoadind();
     const result = fetch(host(endpoints.LOGOUT), {
         method: "GET",
         headers: {
             'user-token': token
         }
     });
-    
-    localStorage.removeItem('userToken');
 
+    localStorage.removeItem('userToken');
+    hideLoadind();
     return result;
 }
 export async function getAllMovies() {
-    return (await fetch(host(endpoints.MOVIES))).json();
+    showLoadind();
+    const result = (await fetch(host(endpoints.MOVIES))).json();
+    hideLoadind();
+    return result;
 }
 async function getMovieById(id) {
-    return (await fetch(host(endpoints.MOVIES + '/' + id))).json();
+    showLoadind();
+    const result = (await fetch(host(endpoints.MOVIES + '/' + id))).json();
+    hideLoadind();
+    return result;
 }
 export async function createMovie(movie) {
     const token = localStorage.getItem('userToken');
@@ -68,7 +80,8 @@ export async function createMovie(movie) {
     if (!token) {
         throw new Error('User is not logged in!');
     }
-    const result =await (await fetch(host(endpoints.MOVIES), {
+    showLoadind();
+    const result = await (await fetch(host(endpoints.MOVIES), {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -81,6 +94,7 @@ export async function createMovie(movie) {
         Object.assign(error, result);
         throw error;
     }
+    hideLoadind();
     return result;
 
 }
@@ -90,7 +104,8 @@ export async function editMovie(id, movie) {
     if (!token) {
         throw new Error('User is not logged in!');
     }
-    const result =await (await fetch(host(endpoints.MOVIES + '/' + id), {
+    showLoadind();
+    const result = await (await fetch(host(endpoints.MOVIES + '/' + id), {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -103,6 +118,7 @@ export async function editMovie(id, movie) {
         Object.assign(error, result);
         throw error;
     }
+    hideLoadind();
     return result;
 }
 export async function deleteMovie(id) {
@@ -111,7 +127,8 @@ export async function deleteMovie(id) {
     if (!token) {
         throw new Error('User is not logged in!');
     }
-    const result =await (await fetch(host(endpoints.MOVIES + '/' + id), {
+    showLoadind();
+    const result = await (await fetch(host(endpoints.MOVIES + '/' + id), {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -123,6 +140,7 @@ export async function deleteMovie(id) {
         Object.assign(error, result);
         throw error;
     }
+    hideLoadind();
     return result;
 }
 export async function getMoviesByUserId(userId) {
@@ -131,7 +149,8 @@ export async function getMoviesByUserId(userId) {
     if (!token) {
         throw new Error('User is not logged in!');
     }
-    const result =await (await fetch(host(endpoints.MOVIES + `?where=ownerId%3D%27${userId}%27`), {
+    showLoadind();
+    const result = await (await fetch(host(endpoints.MOVIES + `?where=ownerId%3D%27${userId}%27`), {
         headers: {
             "user-token": token
         }
@@ -141,12 +160,14 @@ export async function getMoviesByUserId(userId) {
         Object.assign(error, result);
         throw error;
     }
+    hideLoadind();
     return result;
 }
 export async function buyTicket(movie) {
     const newTickets = movie.tickets--;
-    const movieId=movie.objectId;
-    const result = await editMovie(movieId,{tickets: newTickets});
+    const movieId = movie.objectId;
+
+    const result = await editMovie(movieId, { tickets: newTickets });
     return result;
 }
 

@@ -1,5 +1,5 @@
 import { register as apiRegister } from '../js/data.js';
-
+import{showInfo,showError} from './notification.js';
 export default async function register() {
     this.partials = {
         header: await this.load('./templates/common/header.hbs'),
@@ -23,16 +23,18 @@ export async function registerPost() {
     }
 
     try {
+
         const result = await apiRegister(this.params.username, this.params.password)
         if (result.hasOwnProperty("errorData")) {
             const error = new Error()
             Object.assign(error, result)
             throw error
         }
+        showInfo('Successfully register!')
         this.redirect("#/login")
 
     } catch (err) {
         console.log(err)
-        alert(err.message)
+        showError(err.message)
     }
 }
