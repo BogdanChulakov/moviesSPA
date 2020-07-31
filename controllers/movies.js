@@ -3,7 +3,7 @@ export default async function catalog(){
         header: await this.load('./templates/common/header.hbs'),
         footer: await this.load('./templates/common/footer.hbs')
     }
-    this.partial('./templates/movies/catalog.hbs')
+    this.partial('./templates/movies/catalog.hbs',this.app.userData)
 }
 
 export async function create(){
@@ -11,7 +11,7 @@ export async function create(){
         header: await this.load('./templates/common/header.hbs'),
         footer: await this.load('./templates/common/footer.hbs')
     }
-    this.partial('./templates/movies/addForm.hbs')
+    this.partial('./templates/movies/addForm.hbs',this.app.userData)
 }
 
 export async function edit(){
@@ -19,7 +19,7 @@ export async function edit(){
         header: await this.load('./templates/common/header.hbs'),
         footer: await this.load('./templates/common/footer.hbs')
     }
-    this.partial('./templates/movies/editForm.hbs')
+    this.partial('./templates/movies/editForm.hbs',this.app.userData)
 }
 
 export async function details(){
@@ -27,5 +27,5 @@ export async function details(){
         header: await this.load('./templates/common/header.hbs'),
         footer: await this.load('./templates/common/footer.hbs')
     }
-    this.partial('./templates/movies/details.hbs')
+    this.partial('./templates/movies/details.hbs',this.app.userData)
 }
