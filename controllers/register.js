@@ -1,5 +1,6 @@
 import { register as apiRegister } from '../js/data.js';
 import{showInfo,showError} from './notification.js';
+
 export default async function register() {
     this.partials = {
         header: await this.load('./templates/common/header.hbs'),
@@ -9,21 +10,17 @@ export default async function register() {
 }
 
 export async function registerPost() {
-    if (this.params.password !== this.params.repeatPassword) {
-        alert('Pasword must match!');
-        return;
-    }
-    if (this.params.username.length < 3) {
-        alert('Name must be at least 3 characters!');
-        return;
-    }
-    if (this.params.password.length < 6) {
-        alert('Password must be at least 6 characters!');
-        return;
-    }
 
     try {
-
+        if (this.params.title !== this.params.repeatPassword) {
+            throw new Error('Pasword must match!');
+        }
+        if (this.params.username.length < 3) {
+            throw new Error('Name must be at least 3 characters!');
+        }
+        if (this.params.password.length < 6) {
+            throw new Error('Password must be at least 6 characters!');
+        }
         const result = await apiRegister(this.params.username, this.params.password)
         if (result.hasOwnProperty("errorData")) {
             const error = new Error()

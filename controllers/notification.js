@@ -8,7 +8,6 @@ elements.info.addEventListener('click', hideInfo);
 elements.error.addEventListener('click', hideError);
 
 export function showInfo(message) {
-    console.log(elements.info)
     elements.info.children[0].textContent = message;
     elements.info.style.display = 'block';
     setTimeout(hideInfo, 3000);

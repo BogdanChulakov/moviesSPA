@@ -68,7 +68,7 @@ export async function getAllMovies() {
     hideLoadind();
     return result;
 }
-async function getMovieById(id) {
+export async function getMovieById(id) {
     showLoadind();
     const result = (await fetch(host(endpoints.MOVIES + '/' + id))).json();
     hideLoadind();
@@ -81,7 +81,7 @@ export async function createMovie(movie) {
         throw new Error('User is not logged in!');
     }
     showLoadind();
-    const result = await (await fetch(host(endpoints.MOVIES), {
+    const result = (await fetch(host(endpoints.MOVIES), {
         method: "POST",
         headers: {
             'Content-Type': 'application/json',
@@ -105,7 +105,7 @@ export async function editMovie(id, movie) {
         throw new Error('User is not logged in!');
     }
     showLoadind();
-    const result = await (await fetch(host(endpoints.MOVIES + '/' + id), {
+    const result = (await fetch(host(endpoints.MOVIES + '/' + id), {
         method: "PUT",
         headers: {
             'Content-Type': 'application/json',
@@ -128,7 +128,7 @@ export async function deleteMovie(id) {
         throw new Error('User is not logged in!');
     }
     showLoadind();
-    const result = await (await fetch(host(endpoints.MOVIES + '/' + id), {
+    const result = (await fetch(host(endpoints.MOVIES + '/' + id), {
         method: "DELETE",
         headers: {
             'Content-Type': 'application/json',
@@ -143,14 +143,16 @@ export async function deleteMovie(id) {
     hideLoadind();
     return result;
 }
-export async function getMoviesByUserId(userId) {
+export async function getMoviesByUserId() {
     const token = localStorage.getItem('userToken');
+    const userId = localStorage.getItem('userId');
+
 
     if (!token) {
         throw new Error('User is not logged in!');
     }
     showLoadind();
-    const result = await (await fetch(host(endpoints.MOVIES + `?where=ownerId%3D%27${userId}%27`), {
+    const result = (await fetch(host(endpoints.MOVIES + `?where=ownerId%3D%27${userId}%27`), {
         headers: {
             "user-token": token
         }
@@ -164,7 +166,10 @@ export async function getMoviesByUserId(userId) {
     return result;
 }
 export async function buyTicket(movie) {
-    const newTickets = movie.tickets--;
+    let newTickets = movie.tickets - 1;
+    if (newTickets < 0) {
+        newTickets = 0;
+    }
     const movieId = movie.objectId;
 
     const result = await editMovie(movieId, { tickets: newTickets });
