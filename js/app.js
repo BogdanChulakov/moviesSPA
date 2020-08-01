@@ -1,7 +1,7 @@
 import home from '../controllers/home.js';
 import register, { registerPost } from '../controllers/register.js';
 import login, { loginPost, logout } from '../controllers/login.js';
-import catalog, { create, edit, details, createPost,buyTicket,getMyMovies , editPost } from '../controllers/movies.js';
+import catalog, { create, edit, details, createPost,buyTicket,getMyMovies , editPost,deleteMovie } from '../controllers/movies.js';
 
 
 
@@ -34,6 +34,8 @@ window.addEventListener("load", () => {
         this.post('#/login', c => { loginPost.call(c); });
         this.post('#/create', c => { createPost.call(c); });
         this.post('#/edit/:id', c => { editPost.call(c); });
+        this.get('#/delete/:id',deleteMovie);
+
 
         this.get('#/buy/:id', buyTicket);
 

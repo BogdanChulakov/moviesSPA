@@ -62,9 +62,14 @@ export async function logOut() {
     hideLoadind();
     return result;
 }
-export async function getAllMovies() {
+export async function getAllMovies(search) {
     showLoadind();
-    const result = (await fetch(host(endpoints.MOVIES))).json();
+    let result;
+    if(!search){
+    result= (await fetch(host(endpoints.MOVIES))).json();
+    }else{
+     result= (await fetch(host(endpoints.MOVIES + `?where=${escape(`genres LIKE '%${search}%'`)}`))).json();
+    }
     hideLoadind();
     return result;
 }
